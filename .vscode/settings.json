@@ -1,0 +1,13 @@
+{
+  "search.exclude": {
+    "**/.yarn": true,
+    "**/.pnp.*": true
+  },
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "npm.packageManager": "yarn",
+  "standard.enable": true,
+  "standard.autoFixOnSave": true,
+  "standard.validate": ["javascript"],
+  "javascript.validate.enable": false,
+  "eslint.enable": false
+}
