@@ -61,12 +61,23 @@ export async function updateBio (request, reply) {
     postId: postHistoryRaw.postId
   }
 
-  // Only content, title and langauge, is going to be inserted.
+  /**
+   * Only content, title and langauge, is going to be inserted.
+   * @type {PrismaTypes.PostHistory}
+   */
   const dataToInsert = {
-    title: title || postHistoryRaw.title,
+    title: title || postHistoryRaw.title || 'Bio',
     content: JSON.stringify(sanitizedContent),
     language
   }
+
+  // Update lastUpdated for post.
+  await request.server.prisma.post.update({
+    where: { id: postHistory.postId },
+    data: {
+      lastUpdated: new Date()
+    }
+  })
 
   return await createBio(request.server.prisma, user.id, postHistory, dataToInsert)
 }

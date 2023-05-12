@@ -44,6 +44,49 @@ export const postMetadataWithPostHistory = postMetadataCore.extend({
   postHistory: postHistoryCore
 })
 
+const WhereStringFilters = z.object({
+  equals: z.string(),
+  not: z.string(),
+  startsWith: z.string(),
+  mode: z.enum(['insensitive'])
+})
+
+const WhereStringFiltersUnion = z.union([z.string(), WhereStringFilters.partial()])
+
+const WhereBoolFilters = z.object({
+  equals: z.boolean(),
+  not: z.boolean()
+})
+
+const WhereBoolFiltersUnion = z.union([z.boolean(), WhereBoolFilters.partial()])
+
+const WhereOptions = z.object({
+  postHistory: z.object({
+    every: z.object({
+      postMetadata: z.object({
+        userId: z.string()
+      })
+    }),
+    some: z.object({
+      title: WhereStringFiltersUnion.optional(),
+      language: postHistoryCore.shape.language,
+      postId: postHistoryCore.shape.postId
+    }).partial()
+  }).partial(),
+  inRelations: z.object({
+    some: z.object({
+      isSystem: WhereBoolFiltersUnion.optional(),
+      fromPostId: WhereStringFiltersUnion.optional()
+    })
+  }),
+  outRelations: z.object({
+    some: z.object({
+      isSystem: WhereBoolFiltersUnion.optional(),
+      toPostId: WhereStringFiltersUnion.optional()
+    })
+  })
+})
+
 // Querystrings
 
 export const cursor = z.string().optional()
@@ -65,24 +108,8 @@ export const postHistoryParamsId = z.object({
 // Requests
 
 export const postsFilterRequestSchema = z.object({
-  postHistory: z.object({
-    every: z.object({
-      postMetadata: z.object({
-        userId: z.string()
-      })
-    })
-  }).optional(),
-  inRelations: z.object({
-    some: z.object({
-      fromPostId: z.string()
-    })
-  }).optional(),
-  outRelations: z.object({
-    some: z.object({
-      toPostId: z.string()
-    })
-  }).optional()
-})
+  AND: z.array(WhereOptions.partial())
+}).merge(WhereOptions).partial()
 
 // Responses
 
