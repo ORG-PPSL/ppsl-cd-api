@@ -1,4 +1,4 @@
-import { ACTIVE_POSTHISTORY_WHERE } from '../../schemas.js'
+import { ACTIVE_POSTHISTORY_WHERE } from '../../constants.js'
 
 /**
  * @type {import('../../../.prisma/client).Prisma.PostInclude}
@@ -47,10 +47,31 @@ export async function postWithContentById (prisma, id) {
 /**
  * @param {PrismaClient} prisma
  */
-// export async function postRelationsByFromPostId (prisma, id) {
-//   return await prisma.postRelation.findMany({
-//     where: {
-//       fromPostId: id
-//     }
-//   })
-// }
+export async function postWithSystemRelationsById (prisma, id) {
+  return await prisma.post.findFirst({
+    where: {
+      id
+    },
+    include: {
+      outRelations: {
+        select: {
+          isSystem: true,
+          toPostId: true,
+          toPost: {
+            select: {
+              postHistory: {
+                select: {
+                  title: true,
+                  language: true
+                }
+              }
+            }
+          }
+        },
+        where: {
+          isSystem: true
+        }
+      }
+    }
+  })
+}
