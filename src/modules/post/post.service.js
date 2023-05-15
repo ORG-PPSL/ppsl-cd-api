@@ -40,7 +40,27 @@ export async function postWithContentById (prisma, id) {
     where: {
       id
     },
-    include: activePostHistoryInclude
+    include: {
+      outRelations: {
+        select: {
+          toPost: {
+            select: {
+              id: true,
+              postHistory: {
+                select: {
+                  title: true,
+                  language: true
+                },
+                where: activePostHistoryInclude.postHistory.where,
+                take: 1
+              }
+            }
+          },
+          isSystem: true
+        }
+      },
+      postHistory: activePostHistoryInclude.postHistory
+    }
   })
 }
 
@@ -74,4 +94,20 @@ export async function postWithSystemRelationsById (prisma, id) {
       }
     }
   })
+}
+
+/**
+ * @param {PrismaClient} prisma
+ */
+export async function updatePostLastUpdatedById (prisma, id, newLastUpdated) {
+  const { lastUpdated } = await prisma.post.update({
+    where: {
+      id
+    },
+    data: {
+      lastUpdated: newLastUpdated
+    }
+  })
+
+  return lastUpdated
 }

@@ -3,7 +3,9 @@ import { buildJsonSchemas } from 'fastify-zod'
 import { encode } from '@msgpack/msgpack'
 
 export const postCore = z.object({
-  id: z.string()
+  id: z.string(),
+  lastUpdated: z.date(),
+  createdTimestamp: z.date()
 })
 
 export const postMetadataCore = z.object({
@@ -32,7 +34,7 @@ export const postHistoryCore = z.object({
 
   postMetadataId: z.string(),
 
-  post: postCore.optional(),
+  post: postCore.partial().optional(),
   postId: postCore.shape.id
 })
 
@@ -123,7 +125,7 @@ export const postReviewAddRequestSchema = postHistoryEssentials.required().merge
 
 // Responses
 
-export const postResponseSchema = postCore.extend({
+export const postResponseSchema = postCore.partial().extend({
   postHistory: z.array(postHistoryCore.pick({
     title: true,
     language: true,
@@ -131,8 +133,14 @@ export const postResponseSchema = postCore.extend({
   }))
 })
 
-export const postResponseWithPostHistoryContentSchema = postCore.extend({
-  postHistory: z.array(postHistoryCore)
+export const postWithPostHistoryContentAndOutRelationsResponseSchema = postCore.partial().extend({
+  postHistory: z.array(postHistoryCore),
+  outRelations: z.array(z.object({
+    isSystem: z.boolean(),
+    toPost: postCore.partial().extend({
+      postHistory: z.array(postHistoryCore.pick({ language: true, title: true }))
+    })
+  }))
 })
 
 export const postsPaginatedResponseSchema = z.object({
@@ -170,16 +178,17 @@ export const postReviewsPaginatedResponseSchema = z.object({
 
 export const { schemas: postSchemas, $ref } = buildJsonSchemas({
   postsFilterRequestSchema,
-  postsPaginatedResponseSchema,
-  postResponseSchema,
-  postResponseWithPostHistoryContentSchema,
   postReviewAddRequestSchema,
+
+  postResponseSchema,
+  postWithPostHistoryContentAndOutRelationsResponseSchema,
   postReviewResponseSchema,
 
   postParamsId,
+  postHistoryParamsId,
   postPaginationQueries,
 
-  postHistoryParamsId,
+  postsPaginatedResponseSchema,
   postHistoriesPaginatedResponseSchema,
   postReviewsPaginatedResponseSchema
 }, { $id: 'post' })

@@ -4,9 +4,10 @@ import {
   getAllPosts,
   getPostHistoriesByPostId,
   createEntityPost,
-  updateReview,
   getAllPostReviews,
-  getUserReviewByPostId
+  getUserReviewByPostId,
+  upsertReview,
+  getPostAuthors
 } from './post.controller.js'
 import { $ref } from './post.schema.js'
 import { $ref as $refUser } from '../user/user.schema.js'
@@ -47,7 +48,7 @@ export default async function postRoutes (fastify) {
     schema: {
       params: $ref('postParamsId'),
       response: {
-        200: $ref('postResponseWithPostHistoryContentSchema')
+        200: $ref('postWithPostHistoryContentAndOutRelationsResponseSchema')
       }
     }
   }, getPostById)
@@ -85,7 +86,8 @@ export default async function postRoutes (fastify) {
       params: $ref('postParamsId'),
       response: {
         200: $ref('postReviewResponseSchema')
-      }
+      },
+      description: 'Requires authorization cookie.'
     }
   }, getUserReviewByPostId)
 
@@ -97,14 +99,14 @@ export default async function postRoutes (fastify) {
       body: $ref('postReviewAddRequestSchema'),
       description: 'Requires authorization cookie.'
     }
-  }, updateReview)
+  }, upsertReview)
 
-  // fastify.get('/id/:id/history/:historyId', {
-  //   schema: {
-  //     params: $ref('postHistoryParamsId'),
-  //     // response: {
-  //     //   200: $ref('postHistoryResponseSchema')
-  //     // }
-  //   }
-  // }, getPostHistoryByHistoryId)
+  fastify.get('/id/:id/authors', {
+    schema: {
+      params: $ref('postParamsId'),
+      response: {
+        200: $refUser('usersOnlyNameAndIdResponseSchema')
+      }
+    }
+  }, getPostAuthors)
 }
