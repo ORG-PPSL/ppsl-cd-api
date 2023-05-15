@@ -12,12 +12,14 @@ Based\* on [@TomDoesTech](https://github.com/TomDoesTech)'s video titled [Build 
 * **Prisma** - TypeScript ORM.
 * **Auth.js through `authey` & `@next-auth/prisma-adapter`** - SSO authentication.
 * **`zod` & `fastify-zod`** - Request & response validation.
+* **Lexical** - WYSIWYG document editor, headless. For user input validation use only.
 
 ## Setup
 
 * Node.js LTS recommended (Node.js 18.16.0 when this was written).
 * Yarn (Node.js >=16.10 (corepack) & Node.js >=18.6 (yarn@stable) installation steps).
-* `yarn` && `yarn start`
+* `yarn` && `yarn run prisma:db-push` && `yarn start`
+* `git submodule init` && `git submodule update`
 
 ## License
 
