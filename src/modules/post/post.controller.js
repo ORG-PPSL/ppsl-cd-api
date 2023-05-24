@@ -34,13 +34,36 @@ export function getMiddlewarePost (request) {
   return request.post
 }
 
+const excludeBioPosts = {
+  outRelations: {
+    some: {
+      isSystem: true,
+      toPostId: {
+        not: 'bio'
+      }
+    }
+  }
+}
+
 /**
  * @param {Fastify.Request} request
  * @param {Fastify.Reply} reply
  */
 export async function getAllPosts (request, reply) {
   const { cursor } = request.query
-  const filter = request.body
+  let filter = request.body
+
+  if (filter.AND) filter.AND.push(excludeBioPosts)
+  else {
+    filter = {
+      AND: [{
+        ...filter
+      },
+      { ...excludeBioPosts }
+      ]
+    }
+  }
+
   const res = await allPostsPaginated(request.server.prisma, cursor, filter)
 
   if (res.length === 0) {

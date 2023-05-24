@@ -69,6 +69,7 @@ const WhereBoolFilters = z.object({
 const WhereBoolFiltersUnion = z.union([z.boolean(), WhereBoolFilters.partial()])
 
 const WhereOptions = z.object({
+  id: WhereStringFiltersUnion.optional(),
   postHistory: z.object({
     every: z.object({
       postMetadata: z.object({

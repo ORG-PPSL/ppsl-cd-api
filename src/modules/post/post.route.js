@@ -59,10 +59,10 @@ export default async function postRoutes (fastify) {
   fastify.post('/id/:id', {
     preHandler: [fastify.authenticate, postExists],
     schema: {
-      params: $ref('postParamsId'),
-      response: {
-        200: $ref('')
-      }
+      params: $ref('postParamsId')
+      // , response: {
+      //   200: $ref('')
+      // }
     }
   }, updatePostById)
 
