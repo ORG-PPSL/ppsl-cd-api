@@ -27,7 +27,7 @@ export async function allPostsPaginated (prisma, cursor, filter) {
     where: filter,
     include: activePostHistoryInclude,
     orderBy: {
-      createdTimestamp: 'desc'
+      lastUpdated: 'desc'
     }
   })
 }
