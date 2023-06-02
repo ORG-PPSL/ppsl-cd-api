@@ -7,7 +7,8 @@ export const activePostHistoryInclude = {
   postHistory: {
     where: ACTIVE_POSTHISTORY_WHERE,
     take: 1
-  }
+  },
+  _count: true
 }
 
 /**
@@ -16,20 +17,25 @@ export const activePostHistoryInclude = {
  * @param {import('../../../.prisma/client').Prisma.PostInclude} include
  */
 export async function allPostsPaginated (prisma, cursor, filter) {
-  return await prisma.post.findMany({
-    take: 50,
-    skip: cursor ? 1 : undefined,
-    cursor: cursor
-      ? {
-          id: cursor
-        }
-      : undefined,
-    where: filter,
-    include: activePostHistoryInclude,
-    orderBy: {
-      lastUpdated: 'desc'
-    }
-  })
+  const [posts, count] = await prisma.$transaction([
+    prisma.post.findMany({
+      take: 50,
+      skip: cursor ? 1 : undefined,
+      cursor: cursor
+        ? {
+            id: cursor
+          }
+        : undefined,
+      where: filter,
+      include: activePostHistoryInclude,
+      orderBy: {
+        lastUpdated: 'desc'
+      }
+    }),
+    prisma.post.count({ where: filter })
+  ])
+
+  return { posts, count }
 }
 
 /**

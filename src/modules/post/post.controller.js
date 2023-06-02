@@ -64,18 +64,20 @@ export async function getAllPosts (request, reply) {
     }
   }
 
-  const res = await allPostsPaginated(request.server.prisma, cursor, filter)
+  const { posts, count } = await allPostsPaginated(request.server.prisma, cursor, filter)
 
-  if (res.length === 0) {
+  if (posts.length === 0) {
     return {
       result: [],
-      cursor
+      cursor,
+      count
     }
   }
 
   return {
-    result: res,
-    cursor: res[res.length - 1].id
+    result: posts,
+    cursor: posts[posts.length - 1].id,
+    count
   }
 }
 
@@ -85,7 +87,7 @@ export async function getAllPosts (request, reply) {
  */
 export async function getAllSystemPosts (request, reply) {
   const { cursor } = request.query
-  const res = await allPostsPaginated(request.server.prisma, cursor, {
+  const { posts, count } = await allPostsPaginated(request.server.prisma, cursor, {
     outRelations: {
       some: {
         toPostId: SYSTEM
@@ -93,16 +95,18 @@ export async function getAllSystemPosts (request, reply) {
     }
   })
 
-  if (res.length === 0) {
+  if (posts.length === 0) {
     return {
       result: [],
-      cursor
+      cursor,
+      count
     }
   }
 
   return {
-    result: res,
-    cursor: res[res.length - 1].id
+    result: posts,
+    cursor: posts[posts.length - 1].id,
+    count
   }
 }
 
@@ -373,18 +377,20 @@ export async function getAllPostReviews (request, reply) {
   const { id } = request.params
   const { cursor } = request.query
 
-  const res = await allReviewsForPostIdPaginated(request.server.prisma, id, cursor)
+  const { postReviews, count } = await allReviewsForPostIdPaginated(request.server.prisma, id, cursor)
 
-  if (res.length === 0) {
+  if (postReviews.length === 0) {
     return {
       result: [],
-      cursor
+      cursor,
+      count
     }
   }
 
   return postReviewsPaginatedResponseSchema.parse({
-    result: res,
-    cursor: res[res.length - 1].id
+    result: postReviews,
+    cursor: postReviews[postReviews.length - 1].id,
+    count
   })
 }
 

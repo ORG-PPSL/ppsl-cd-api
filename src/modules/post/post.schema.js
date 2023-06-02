@@ -170,7 +170,8 @@ export const postUpdateResponse = postCore.extend({
 
 export const postsPaginatedResponseSchema = z.object({
   result: z.array(postResponseSchema),
-  cursor
+  cursor,
+  count: z.number()
 })
 
 export const postHistoriesPaginatedResponseSchema = z.object({
@@ -182,7 +183,8 @@ export const postReviewsPaginatedResponseSchema = z.object({
   result: z.array(postReviewResponseSchema.merge(z.object({
     user: z.object({ name: z.string() })
   }))),
-  cursor
+  cursor,
+  count: z.number()
 })
 
 // Build

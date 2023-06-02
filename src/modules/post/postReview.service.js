@@ -5,42 +5,47 @@ import { ACTIVE_POSTHISTORY_WHERE } from '../../constants.js'
  * @param {string} postId
  */
 export async function allReviewsForPostIdPaginated (prisma, postId, cursor) {
-  return prisma.postReview.findMany({
-    take: 50,
-    skip: cursor ? 1 : undefined,
-    cursor: cursor
-      ? {
-          id: cursor
-        }
-      : undefined,
-    where: {
-      toPostId: postId
-    },
-    include: {
-      user: {
-        select: {
-          name: true
-        }
+  const [postReviews, count] = await prisma.$transaction([
+    prisma.postReview.findMany({
+      take: 50,
+      skip: cursor ? 1 : undefined,
+      cursor: cursor
+        ? {
+            id: cursor
+          }
+        : undefined,
+      where: {
+        toPostId: postId
       },
-      fromPost: {
-        include: {
-          postHistory: {
-            where: {
-              endTimestamp: ACTIVE_POSTHISTORY_WHERE.endTimestamp
-            },
-            select: {
-              title: true,
-              id: true,
-              language: true,
-              createdTimestamp: true,
-              content: true
-            },
-            take: 1
+      include: {
+        user: {
+          select: {
+            name: true
+          }
+        },
+        fromPost: {
+          include: {
+            postHistory: {
+              where: {
+                endTimestamp: ACTIVE_POSTHISTORY_WHERE.endTimestamp
+              },
+              select: {
+                title: true,
+                id: true,
+                language: true,
+                createdTimestamp: true,
+                content: true
+              },
+              take: 1
+            }
           }
         }
       }
-    }
-  })
+    }),
+    prisma.postReview.count({ where: { toPostId: postId } })
+  ])
+
+  return { postReviews, count }
 }
 
 /**
