@@ -1,5 +1,5 @@
 import fp from 'fastify-plugin'
-import Middie from '@fastify/middie/engine.js'
+import Middie from '@fastify/middie/lib/engine.js'
 import helmet from 'helmet'
 import { createAuthMiddleware, getSession } from 'authey'
 import { PrismaAdapter } from '@next-auth/prisma-adapter'

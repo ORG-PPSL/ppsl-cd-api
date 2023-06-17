@@ -1,13 +1,13 @@
 import lexical from 'lexical'
 import lexicalHeadless from '@lexical/headless'
-import { bioConfig } from './ppsl-cd-lexical-shared/src/editors/Bio/config'
-import { defaultTheme, readOnlyTheme } from './ppsl-cd-lexical-shared/src/editors/theme'
-import { entityConfig } from './ppsl-cd-lexical-shared/src/editors/Entity/config'
-import { $isEntityContainerNode } from './ppsl-cd-lexical-shared/src/editors/plugins/EntityContainer/node'
-import { $isEntityImageNode } from './ppsl-cd-lexical-shared/src/editors/plugins/EntityImage/node'
-import { $isEntityShortDescriptionNode } from './ppsl-cd-lexical-shared/src/editors/plugins/EntityShortDescription/node'
-import { $isEntityLongDescriptionNode } from './ppsl-cd-lexical-shared/src/editors/plugins/EntityLongDescription/node'
-import { EntityMentionNode } from './ppsl-cd-lexical-shared/src/editors/plugins/EntityMention/node'
+import { bioConfig } from './ppsl-cd-lexical-shared/src/editors/Bio/config.js'
+import { defaultTheme, readOnlyTheme } from './ppsl-cd-lexical-shared/src/editors/theme.js'
+import { entityConfig } from './ppsl-cd-lexical-shared/src/editors/Entity/config.js'
+import { $isEntityContainerNode } from './ppsl-cd-lexical-shared/src/editors/plugins/EntityContainer/node.js'
+import { $isEntityImageNode } from './ppsl-cd-lexical-shared/src/editors/plugins/EntityImage/node.js'
+import { $isEntityShortDescriptionNode } from './ppsl-cd-lexical-shared/src/editors/plugins/EntityShortDescription/node.js'
+import { $isEntityLongDescriptionNode } from './ppsl-cd-lexical-shared/src/editors/plugins/EntityLongDescription/node.js'
+import { EntityMentionNode } from './ppsl-cd-lexical-shared/src/editors/plugins/EntityMention/node.js'
 
 const {
   $getRoot,
