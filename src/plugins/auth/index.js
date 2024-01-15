@@ -13,7 +13,7 @@ import { GitHub } from './providers/github.js'
  * @param {Fastify.Request} request
  * @param {Fastify.Reply} reply
  */
-export async function authenticate (request, reply, next) {
+export async function authenticate (request, reply) {
   const session = await request.server.getSession(request)
 
   if (!session?.user) {

@@ -1,11 +1,9 @@
-import { decode } from '@msgpack/msgpack'
-
 import { InvalidEditor } from '../../errors.js'
 
-import toHTML from './ppsl-cd-lexical-shared/src/toHTML/index.js'
-
-import { bioEditorValidation, entityEditorValidation } from './lexical.service.js'
 import { getMiddlewarePostHistory } from '../post/postHistory.controller.js'
+
+import toHTML from './ppsl-cd-lexical-shared/src/toHTML/index.js'
+import { bioEditorValidation, entityEditorValidation } from './lexical.service.js'
 
 /**
  * @param {Fastify.Request} request
@@ -48,7 +46,7 @@ export async function validateEntityEditor (request, reply, internalRequest) {
 
   let content
   try {
-    content = decode(body.content.split(','))
+    content = body.content
   } catch (error) {
     return reply.status(400).send()
   }

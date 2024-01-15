@@ -1,6 +1,5 @@
 import { z } from 'zod'
 import { buildJsonSchemas } from 'fastify-zod'
-import { encode } from '@msgpack/msgpack'
 
 export const postCore = z.object({
   id: z.string(),
@@ -20,14 +19,7 @@ export const postHistoryCore = z.object({
   title: z.string(),
   language: z.string(),
 
-  // Due to transform, this, and anything that uses it, must use this schema on the res object.
-  content: z.string().transform((content) => {
-    try {
-      return encode(JSON.parse(content)).toString()
-    } catch (error) {
-      return content
-    }
-  }).describe('Encoded with @msgpack/msgpack'),
+  content: z.string(),
 
   endTimestamp: z.date(),
   createdTimestamp: z.date(),
