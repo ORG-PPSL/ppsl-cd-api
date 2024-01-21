@@ -17,7 +17,7 @@ export async function validateBioEditor (request, reply, internalRequest) {
 
   let content
   try {
-    content = decode(body.content.split(','))
+    content = body.content
   } catch (error) {
     return reply.status(400).send()
   }
