@@ -35,6 +35,7 @@ const authPlugin = fp(async (fastify, opts) => {
    * @type {import('@auth/core').AuthConfig}
    */
   const options = {
+    basePath: '/api/auth',
     secret: process.env.AUTH_SECRET,
     trustHost: true,
     providers: [Google, GitHub],
