@@ -2,7 +2,6 @@ import { InvalidEditor, MissingTitle, NoPermissions, NoValidationAvailable, NotF
 import { ACTIVE_POSTHISTORY_WHERE, SYSTEM_IDS } from '../../constants.js'
 
 import { allPostsPaginated, postWithContentById } from './post.service.js'
-import { postReviewResponseSchema, postReviewsPaginatedResponseSchema, postWithPostHistoryContentAndOutRelationsResponseSchema } from './post.schema.js'
 import { allPostHistoriesPaginated, createPostHistory, replaceActivePostHistory } from './postHistory.service.js'
 import { allReviewsForPostIdPaginated, reviewByUserIdAndToPostId } from './postReview.service.js'
 
@@ -117,8 +116,7 @@ export async function getAllSystemPosts (request, reply) {
 export async function getPostById (request, reply) {
   const post = getMiddlewarePost(request)
 
-  // Custom transform for content using `@msgpack/msgpack`.
-  return postWithPostHistoryContentAndOutRelationsResponseSchema.parse(post)
+  return post
 }
 
 /**
@@ -387,11 +385,11 @@ export async function getAllPostReviews (request, reply) {
     }
   }
 
-  return postReviewsPaginatedResponseSchema.parse({
+  return {
     result: postReviews,
     cursor: postReviews[postReviews.length - 1].id,
     count
-  })
+  }
 }
 
 export async function getUserReviewByPostId (request, reply) {
@@ -403,8 +401,7 @@ export async function getUserReviewByPostId (request, reply) {
 
   if (!res) return NotFound(reply)
 
-  // Custom transform for content using `@msgpack/msgpack`.
-  return postReviewResponseSchema.parse(res)
+  return res
 }
 
 /**
